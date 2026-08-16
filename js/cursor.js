@@ -7,6 +7,12 @@
 (function () {
   "use strict";
 
+  // 触屏设备（移动端）没有鼠标，直接跳过自定义光标，保留系统行为
+  var isTouch =
+    (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
+    "ontouchstart" in window;
+  if (isTouch) return;
+
   var reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

@@ -309,6 +309,40 @@
         display: none;
       }
     }
+
+    /* ===== 移动端适配 ===== */
+    @media (pointer: coarse) {
+      * {
+        cursor: auto !important;
+      }
+
+      .curs,
+      .curs-trail {
+        display: none !important;
+      }
+
+      .code404 {
+        font-size: clamp(70px, 30vw, 120px);
+        letter-spacing: 2px;
+      }
+
+      .tagline {
+        margin: 10px 0 20px;
+        font-size: 0.85rem;
+      }
+
+      .term {
+        padding: 14px 12px;
+        font-size: 0.78rem;
+        line-height: 1.7;
+        min-height: 120px;
+      }
+
+      .home-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+      }
+    }
   </style>
 </head>
 <body>

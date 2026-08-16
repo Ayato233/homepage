@@ -11,7 +11,11 @@
   const DEPTH_MIN = 0.5; // 远处深度（聚拢温和）
   const DEPTH_MAX = 1; // 近处深度
   const BASE_SPEED = 276; // 近层基准速度 px/s（原 230 +20%）
-  const TARGET_DROPS = 45; // 屏幕上雨滴目标数
+  // 移动端（粗指针）性能：雨滴数量减半
+  const IS_TOUCH =
+    (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
+    "ontouchstart" in window;
+  const TARGET_DROPS = IS_TOUCH ? 24 : 45; // 屏幕上雨滴目标数
   const CHANGE_MIN = 14; // 字符变动最小间隔 ms
   const CHANGE_MAX = 20; // 字符变动最大间隔 ms
   let drops = [];

@@ -444,8 +444,27 @@ body::after {
     font-size: 2rem;
   }
 
+  .site-header p {
+    font-size: 0.8rem;
+  }
+
+  .groups {
+    padding: 12px 16px 40px;
+  }
+
   .card-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+    min-height: 64px; /* 保证触屏点击区域够大 */
+  }
+
+  .card-desc {
+    white-space: normal; /* 移动端允许描述换行，避免截断 */
+    line-height: 1.4;
   }
 }
 
@@ -698,6 +717,20 @@ textarea {
   cursor: text !important;
 }
 
+/* 触屏设备（移动端）恢复系统光标，隐藏自定义准星 */
+@media (pointer: coarse) {
+  *,
+  input,
+  textarea {
+    cursor: auto !important;
+  }
+
+  .curs,
+  .curs-trail {
+    display: none !important;
+  }
+}
+
 .curs {
   position: fixed;
   left: 0;
@@ -788,4 +821,12 @@ textarea {
   color: rgba(63, 157, 79, 0.55);
   pointer-events: none;
   user-select: none;
+}
+
+/* ===== 移动端增强 ===== */
+@media (pointer: coarse) {
+  /* 侧边彩蛋菜单在移动端右键不可用，隐藏背景里的 manage-hint（无意义文案） */
+  #manage-hint {
+    display: none;
+  }
 }
