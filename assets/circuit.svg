@@ -1,0 +1,43 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- 芯片主体 -->
+  <rect x="70" y="70" width="60" height="60" fill="none" stroke="#00c233" stroke-width="2"/>
+  <rect x="79" y="79" width="42" height="42" fill="none" stroke="#00c233" stroke-width="1" opacity="0.5"/>
+  <circle cx="100" cy="100" r="11" fill="none" stroke="#00c233" stroke-width="1.5"/>
+  <!-- 引脚 -->
+  <path d="M70 82 H 40" stroke="#00c233" stroke-width="2"/>
+  <path d="M70 100 H 30" stroke="#00c233" stroke-width="2"/>
+  <path d="M70 118 H 44" stroke="#00c233" stroke-width="2"/>
+  <path d="M130 82 H 160" stroke="#00c233" stroke-width="2"/>
+  <path d="M130 100 H 170" stroke="#00c233" stroke-width="2"/>
+  <path d="M130 118 H 156" stroke="#00c233" stroke-width="2"/>
+  <path d="M82 70 V 40" stroke="#00c233" stroke-width="2"/>
+  <path d="M100 70 V 26" stroke="#00c233" stroke-width="2"/>
+  <path d="M118 70 V 44" stroke="#00c233" stroke-width="2"/>
+  <path d="M82 130 V 160" stroke="#00c233" stroke-width="2"/>
+  <path d="M100 130 V 174" stroke="#00c233" stroke-width="2"/>
+  <path d="M118 130 V 156" stroke="#00c233" stroke-width="2"/>
+  <!-- 走线：正交折线 -->
+  <path d="M40 82 H 20 V 62 H 8" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M30 100 V 132 H 12" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M44 118 V 152 H 62" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M160 82 V 52 H 178 V 34" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M170 100 H 190 V 122" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M156 118 V 148 H 138" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M100 26 V 14" stroke="#00c233" stroke-width="1.5"/>
+  <path d="M82 160 V 176" stroke="#00c233" stroke-width="1.5"/>
+  <path d="M100 174 V 190 H 120 V 197" stroke="#00c233" stroke-width="1.5" fill="none"/>
+  <path d="M118 44 V 30" stroke="#00c233" stroke-width="1.5"/>
+  <!-- 节点 -->
+  <circle cx="8" cy="62" r="3" fill="#00c233"/>
+  <circle cx="12" cy="132" r="3" fill="#00c233"/>
+  <circle cx="62" cy="152" r="3" fill="#00c233"/>
+  <circle cx="178" cy="34" r="3" fill="#00c233"/>
+  <circle cx="190" cy="122" r="3" fill="#00c233"/>
+  <circle cx="138" cy="148" r="3" fill="#00c233"/>
+  <circle cx="100" cy="14" r="3" fill="#00c233"/>
+  <circle cx="82" cy="176" r="3" fill="#00c233"/>
+  <circle cx="120" cy="197" r="3" fill="#00c233"/>
+  <circle cx="118" cy="30" r="3" fill="#00c233"/>
+  <!-- 芯片标签 -->
+  <text x="100" y="105" text-anchor="middle" font-family="monospace" font-size="9" fill="#00c233">DOV</text>
+</svg>

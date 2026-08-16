@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 · ByteHarbor</title>
+  <meta name="description" content="404 - 你要找的页面不存在">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23000'/%3E%3Ctext x='3' y='12' font-family='monospace' font-size='12' fill='%2300ff41'%3E%26gt;%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #000;
+      --text: #b8ffc4;
+      --text-dim: #3f9d4f;
+      --accent: #00ff41;
+      --border: #1c3a1f;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Consolas", "Courier New", "PingFang SC", monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* 代码雨画布 */
+    #rain {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* CRT 扫描线 + 暗角 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.18) 3px
+      );
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.6) 100%);
+    }
+
+    /* 底部黑洞：立体平铺在地面上（透视椭圆洞口） */
+    .hole {
+      position: fixed;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100vw / 3);
+      height: calc(100vw / 6);
+      max-width: 560px;
+      max-height: 280px;
+      border-radius: 50%;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(0, 255, 65, 0.12) 0%, rgba(0, 0, 0, 0) 45%),
+        radial-gradient(ellipse, #000 0%, #000 40%, rgba(25, 0, 45, 0.85) 52%, rgba(60, 0, 90, 0.55) 60%, rgba(0, 255, 65, 0.22) 68%, rgba(0, 0, 0, 0) 78%);
+      box-shadow:
+        inset 0 0 50px rgba(0, 0, 0, 0.95),
+        0 8px 34px rgba(0, 255, 65, 0.12),
+        0 2px 12px rgba(0, 0, 0, 0.8);
+    }
+
+    .hole::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid rgba(120, 0, 255, 0.4);
+      border-top-color: rgba(0, 255, 65, 0.7);
+      border-right-color: rgba(0, 255, 65, 0.2);
+      animation: hole-spin 7s linear infinite;
+    }
+
+    .hole::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 255, 65, 0.16);
+      animation: hole-spin 11s linear infinite reverse;
+    }
+
+    @keyframes hole-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 680px;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .code404 {
+      font-size: clamp(90px, 18vw, 190px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 6px;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(0, 255, 65, 0.7), 0 0 60px rgba(0, 255, 65, 0.3);
+    }
+
+    .tagline {
+      margin: 14px 0 30px;
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    /* 终端面板 */
+    .term {
+      text-align: left;
+      margin: 0 auto 30px;
+      padding: 18px 20px;
+      min-height: 160px;
+      background: rgba(5, 12, 6, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 0 24px rgba(0, 255, 65, 0.12), inset 0 0 12px rgba(0, 255, 65, 0.05);
+      backdrop-filter: blur(4px);
+      font-size: 0.9rem;
+      line-height: 1.9;
+    }
+
+    .term .t {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.6em;
+      height: 1em;
+      margin-left: 2px;
+      vertical-align: -0.15em;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.8);
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* 返回主页按钮 */
+    .home-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #02150a;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 0 18px rgba(0, 255, 65, 0.35);
+      transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .home-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+      box-shadow: 0 0 26px rgba(0, 255, 65, 0.55);
+    }
+
+    .home-btn:active {
+      transform: translateY(0);
+    }
+
+    .hint {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: rgba(63, 157, 79, 0.6);
+    }
+
+    /* ===== 黑客风自定义鼠标（与主页一致） ===== */
+    * {
+      cursor: none !important;
+    }
+
+    input,
+    textarea {
+      cursor: text !important;
+    }
+
+    .curs {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      margin: -11px 0 0 -11px;
+      z-index: 10001;
+      pointer-events: none;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.6), inset 0 0 6px rgba(0, 255, 65, 0.3);
+      transition: width 0.15s ease, height 0.15s ease, margin 0.15s ease, background 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .curs::before,
+    .curs::after {
+      content: "";
+      position: absolute;
+      background: var(--accent);
+      box-shadow: 0 0 6px rgba(0, 255, 65, 0.8);
+    }
+
+    .curs::before {
+      left: 50%;
+      top: -5px;
+      width: 2px;
+      height: 28px;
+      transform: translateX(-50%);
+    }
+
+    .curs::after {
+      top: 50%;
+      left: -5px;
+      height: 2px;
+      width: 28px;
+      transform: translateY(-50%);
+    }
+
+    .curs.curs-hover {
+      width: 36px;
+      height: 36px;
+      margin: -18px 0 0 -18px;
+      background: rgba(0, 255, 65, 0.14);
+      border-color: #ffffff;
+    }
+
+    .curs.curs-hidden {
+      display: none;
+    }
+
+    .curs-trail {
+      position: fixed;
+      z-index: 9997;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 12px;
+      color: var(--accent);
+      pointer-events: none;
+      user-select: none;
+      animation: curs-fade 0.7s ease forwards;
+    }
+
+    @keyframes curs-fade {
+      0% {
+        opacity: 0.9;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-14px) scale(0.5);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor {
+        animation: none;
+        opacity: 1;
+      }
+
+      body::before {
+        display: none;
+      }
+
+      .hole::before,
+      .hole::after {
+        animation: none;
+      }
+
+      .curs-trail {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="rain"></canvas>
+  <div class="hole" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="code404">404</div>
+    <p class="tagline">// page not found · 目标页面不存在</p>
+    <div class="term" id="term" role="log" aria-live="polite"></div>
+    <a class="home-btn" href="index.html">[ $ cd ~ ] 返回主页</a>
+    <p class="hint">$ hint: 地址输错了？链接失效了？回港湾主页重新出发吧</p>
+  </div>
+
+  <script>
+    /* ===== 代码雨（初版效果 + 底部黑洞吞噬） ===== */
+    (function () {
+      var cv = document.getElementById("rain");
+      var ctx = cv.getContext("2d");
+      var chars = "ABCDEF0123456789アイウエオカキクケコサシスセソタチツテト";
+      var size = 16; // 固定字符大小（初版效果）
+      var holeX = 0, holeY = 0; // 黑洞圆心（屏幕中间 1/3 底部）
+      var colsArr = [];
+
+      function reset() {
+        cv.width = window.innerWidth;
+        cv.height = window.innerHeight;
+        holeX = cv.width / 2;
+        // 圆心对齐 .hole 元素（bottom:-60px 且高 min(16.5vw, 280px) 的椭圆）
+        holeY = cv.height + 60 - Math.min(cv.width / 6, 280) / 2;
+        colsArr = [];
+        for (var i = 0; i < Math.ceil(cv.width / size); i++) {
+          var bx = i * size + size / 2; // 原始列位置（重生时回到这里，避免堆在中间）
+          colsArr.push({
+            baseX: bx,
+            x: bx,
+            // 初始 y 随机分散在整个屏幕，避免齐刷刷同时落下
+            y: Math.random() * (cv.height + size) - size
+          });
+        }
+      }
+
+      reset();
+
+      function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.font = size + "px monospace";
+        for (var i = 0; i < colsArr.length; i++) {
+          var d = colsArr[i];
+          var ch = chars[Math.floor(Math.random() * chars.length)];
+
+          // 黑洞吞噬：进入屏幕底部 2/3 区域后，速度矢量平滑转向黑洞（弧线拐弯，不生硬）
+          var swallowed = false;
+          var beingPulled = false;
+          if (d.y > cv.height / 3) {
+            beingPulled = true;
+            var dx = holeX - d.x;
+            var dy = holeY - d.y;
+            var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            // 转向强度：随深入底部 2/3 区域平滑增强（平方缓入，起步轻缓）
+            var progress = (d.y - cv.height / 3) / (cv.height * (2 / 3));
+            var steer = Math.min(1, progress * progress * 1.6);
+            // 速度 = 直落方向与指向黑洞方向的平滑混合，速率保持下落速度
+            var vx = steer * (dx / dist) * (size / 2);
+            var vy = (1 - steer) * (size / 2) + steer * (dy / dist) * (size / 2);
+            d.x += vx;
+            d.y += vy;
+            if (dist < 50) swallowed = true;
+          } else {
+            d.y += size / 2; // 正常下落速度（初版一半）
+          }
+
+          // 被黑洞吸住时即使超出屏幕底部也继续被吸，直到被吞
+          if (swallowed || (!beingPulled && d.y > cv.height + size)) {
+            d.x = d.baseX; // 回到原列位置（修复「中间一条线」bug）
+            d.y = -size - Math.random() * 80;
+            continue; // 本帧不绘制
+          }
+
+          ctx.fillStyle = Math.random() < 0.1 ? "#ffffff" : "#00c233";
+          ctx.fillText(ch, d.x, d.y);
+        }
+        requestAnimationFrame(draw);
+      }
+
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, cv.width, cv.height);
+      } else {
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", reset);
+    })();
+
+    /* ===== 黑客风自定义鼠标（与主页一致） ===== */
+    (function () {
+      var reduced =
+        window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var curs = document.createElement("div");
+      curs.className = "curs";
+      document.body.appendChild(curs);
+
+      var lastSpawn = 0;
+
+      document.addEventListener("mousemove", function (e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        curs.style.left = x + "px";
+        curs.style.top = y + "px";
+
+        var t = e.target;
+        var isText = !!t.closest("input, textarea");
+        curs.classList.toggle("curs-hidden", isText);
+
+        var interactive = !!t.closest(
+          "a, button, .card, .engine-btn, .engine-opt, .ctx-item, .icon-opt, .home-btn"
+        );
+        curs.classList.toggle("curs-hover", interactive && !isText);
+
+        var now = performance.now();
+        if (!reduced && !isText && now - lastSpawn > 30) {
+          lastSpawn = now;
+          spawnTrail(x, y);
+        }
+      });
+
+      document.addEventListener("mouseleave", function () {
+        curs.style.opacity = "0";
+      });
+      document.addEventListener("mouseenter", function () {
+        curs.style.opacity = "1";
+      });
+
+      function spawnTrail(x, y) {
+        var t = document.createElement("span");
+        t.className = "curs-trail";
+        t.textContent = "0123456789abcdef"[Math.floor(Math.random() * 16)];
+        t.style.left = x + (Math.random() * 18 - 9) + "px";
+        t.style.top = y + (Math.random() * 18 - 9) + "px";
+        document.body.appendChild(t);
+        setTimeout(function () {
+          if (t.parentNode) t.parentNode.removeChild(t);
+        }, 700);
+      }
+    })();
+
+    /* ===== 终端错误信息打字机 ===== */
+    (function () {
+      var term = document.getElementById("term");
+      var lines = [
+        "$ curl -I https://byteharbor.local/404",
+        "HTTP/1.1 404 Not Found",
+        "Content-Type: text/html",
+        "",
+        "ERROR: 你要找的页面，溜进数据海了",
+        "$ hint: 试试从主页重新出发"
+      ];
+      var colors = ["#00ff41", "#ff5555", "#8f9f8f", "", "#ff5555", "#1fbf3f"];
+      var li = 0;
+      var cur = document.createElement("span");
+      cur.className = "cursor";
+      var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function appendLine(line, color) {
+        var div = document.createElement("div");
+        div.className = "t";
+        if (color) div.style.color = color;
+        div.textContent = line;
+        term.appendChild(div);
+      }
+
+      function typeLoop() {
+        if (li >= lines.length) {
+          term.appendChild(cur);
+          return;
+        }
+        var line = lines[li];
+        var div = document.createElement("div");
+        div.className = "t";
+        if (colors[li]) div.style.color = colors[li];
+        term.appendChild(div);
+        var i = 0;
+        var t = setInterval(function () {
+          if (i < line.length) {
+            div.textContent = line.slice(0, i + 1);
+            i++;
+          } else {
+            clearInterval(t);
+            li++;
+            setTimeout(typeLoop, 220);
+          }
+        }, 42);
+      }
+
+      if (reduced) {
+        lines.forEach(function (line, i) {
+          appendLine(line, colors[i]);
+        });
+        term.appendChild(cur);
+      } else {
+        typeLoop();
+      }
+    })();
+  </script>
+</body>
+</html>
