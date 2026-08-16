@@ -532,4 +532,92 @@
       );
     }
   });
+
+  /* ---------- 移动端管理模式（悬浮按钮 + tap 编辑） ---------- */
+
+  // 是否触屏设备
+  var isTouch =
+    (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
+    "ontouchstart" in window;
+  if (!isTouch) return;
+
+  var manageMode = false;
+
+  // 全局悬浮管理按钮（仅触屏显示）
+  var fab = document.createElement("button");
+  fab.className = "fab";
+  fab.type = "button";
+  fab.textContent = "⚙️";
+  fab.setAttribute("aria-label", "管理模式");
+  document.body.appendChild(fab);
+
+  fab.addEventListener("click", function () {
+    manageMode = !manageMode;
+    document.body.classList.toggle("manage-mode", manageMode);
+    showMenu(fab.getBoundingClientRect().left, fab.getBoundingClientRect().bottom, [
+      {
+        icon: manageMode ? "✅" : "⚙️",
+        label: manageMode ? "退出管理" : "进入管理模式",
+        action: function () {
+          manageMode = !manageMode;
+          document.body.classList.toggle("manage-mode", manageMode);
+        }
+      },
+      {
+        icon: "➕",
+        label: "添加新分组",
+        action: function () {
+          manageMode = true;
+          document.body.classList.add("manage-mode");
+          openModal(
+            "添加新分组",
+            [
+              { id: "name", label: "分组名", maxlength: 20 },
+              { id: "icon", label: "图标", value: "🧩", maxlength: 4, iconPicker: true }
+            ],
+            function (f) {
+              if (!f.name) {
+                alert("分组名不能为空");
+                return false;
+              }
+              window.LINKS.groups = window.LINKS.groups || [];
+              window.LINKS.groups.push({ name: f.name, icon: f.icon || "🧩", links: [] });
+              save();
+              rerender();
+            }
+          );
+        }
+      }
+    ]);
+    // 菜单需避开屏幕下方，fab 在底部，向下弹会被遮；翻转定位由 showMenu 自动处理
+  });
+
+  // 管理模式下的 tap 编辑：点击卡片或分组标题弹出对应菜单
+  document.addEventListener("click", function (e) {
+    if (!manageMode) return;
+    var t = e.target;
+    if (!t || !t.closest) return;
+    // 点按钮本身/菜单/弹窗内部不重复触发
+    if (t.closest(".fab, #ctx-menu, #edit-modal", document.body)) return;
+
+    var cardEl = t.closest(".card");
+    if (cardEl) {
+      e.preventDefault();
+      showCardMenu(e.clientX !== undefined ? e.clientX : t.getBoundingClientRect().left,
+        (e.clientY !== undefined ? e.clientY : t.getBoundingClientRect().top) + 8, cardEl);
+      return;
+    }
+    var groupEl = t.closest(".group-title");
+    if (groupEl) {
+      var sec = groupEl.closest(".group");
+      if (sec) {
+        e.preventDefault();
+        showGroupMenu(
+          t.getBoundingClientRect().left,
+          t.getBoundingClientRect().bottom,
+          sec
+        );
+      }
+    }
+  });
 })();

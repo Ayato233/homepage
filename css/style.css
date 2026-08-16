@@ -830,3 +830,42 @@ textarea {
     display: none;
   }
 }
+
+/* ===== 移动端悬浮管理按钮（仅触屏显示） ===== */
+@media (pointer: coarse) {
+  .fab {
+    position: fixed;
+    right: 16px;
+    bottom: 18px;
+    z-index: 9990;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: rgba(5, 12, 6, 0.92);
+    color: var(--accent);
+    font-size: 1.5rem;
+    line-height: 1;
+    box-shadow: 0 0 16px rgba(0, 255, 65, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .fab:active {
+    filter: brightness(1.2);
+  }
+
+  /* 管理模式：卡片/分组的触摸编辑提示态 */
+  body.manage-mode .card {
+    outline: 1px dashed rgba(0, 255, 65, 0.5);
+    outline-offset: 3px;
+  }
+
+  body.manage-mode .group-title {
+    text-decoration: underline dashed rgba(0, 255, 65, 0.6);
+    text-underline-offset: 4px;
+    cursor: pointer;
+  }
+}
