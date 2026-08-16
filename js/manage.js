@@ -507,8 +507,10 @@
       showGroupMenu(e.clientX, e.clientY, groupEl);
     } else {
       e.preventDefault();
-      // 屏幕左右两侧各 1/3 弹黑客风终端彩蛋菜单，中间 1/3 弹管理菜单
-      if (e.clientX < window.innerWidth / 3 || e.clientX > (window.innerWidth * 2) / 3) {
+      // 屏幕左右两侧各 (1/3 × 0.8) 弹黑客风终端彩蛋菜单（比原 1/3 缩小 20%），
+      // 中间管理菜单区域更大，确保「添加新分组」等操作不易被彩蛋菜单抢占
+      var sideW = (window.innerWidth * 0.8) / 3;
+      if (e.clientX < sideW || e.clientX > window.innerWidth - sideW) {
         showSideMenu(e.clientX, e.clientY);
       } else {
         showPageMenu(e.clientX, e.clientY);
