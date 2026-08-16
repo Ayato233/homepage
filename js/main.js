@@ -86,7 +86,7 @@
       typeLoop();
     }
     document.getElementById("footer-text").textContent = data.footer || "";
-    document.title = (data.siteName ? data.siteName + " 的主页" : "个人主页");
+    document.title = data.siteName || "ByteHarbor";
 
     var container = document.getElementById("groups");
     var frag = document.createDocumentFragment();
