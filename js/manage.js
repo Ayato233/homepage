@@ -52,7 +52,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(window.LINKS));
     } catch (e) {
-      alert("保存失败（浏览器存储可能被禁用）：" + e.message);
+      window.say("保存失败（浏览器存储可能被禁用）：" + e.message);
     }
   }
 
@@ -154,6 +154,11 @@
   function openModal(title, defs, onSave) {
     mTitle.textContent = title;
     mFields.textContent = "";
+    // 恢复按钮默认态（自定义确认框可能改过文案/危险样式）
+    var okBtn = modal.querySelector("#modal-ok");
+    okBtn.textContent = "保存";
+    okBtn.classList.remove("m-danger");
+    modal.querySelector("#modal-cancel").textContent = "取消";
     var inputs = {};
     defs.forEach(function (d) {
       var wrap = document.createElement("label");
@@ -208,6 +213,40 @@
     onModalSave = null;
   }
 
+  /* ---------- 自定义黑客风提示/确认框（替代原生 confirm/alert，避免阻塞打断光标） ---------- */
+
+  var toast = document.createElement("div");
+  toast.className = "hack-toast";
+  toast.style.display = "none";
+  document.body.appendChild(toast);
+
+  // 简单提示（替代 alert）：短暂显示，不阻塞
+  window.say = function (msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () {
+      toast.classList.remove("show");
+    }, 1800);
+  };
+
+  // 确认框（替代 confirm）：回调式，非阻塞
+  window.ask = function (msg, onYes) {
+    if (typeof onYes !== "function") { window.say(msg); return; }
+    // 复用编辑 modal 的视觉，做成自定义确认框
+    modal.querySelector("#modal-title").textContent = "⚠ 确认操作";
+    mFields.innerHTML = '<div class="ask-msg">' + msg + "</div>";
+    var ok = modal.querySelector("#modal-ok");
+    ok.textContent = "确定";
+    ok.classList.add("m-danger");
+    modal.classList.add("open");
+    onModalSave = function () {
+      closeModal();
+      onYes();
+    };
+    modal.querySelector("#modal-cancel").textContent = "取消";
+  };
+
   // 点遮罩关闭
   modal.addEventListener("click", function (e) {
     if (e.target === modal) closeModal();
@@ -217,8 +256,7 @@
     if (typeof onModalSave !== "function") return;
     var keep = onModalSave(); // onSave 返回 false 表示校验失败，保持弹窗
     if (keep !== false) closeModal();
-  });
-  // 输入框按 Enter 直接保存
+  });  // 输入框按 Enter 直接保存
   mFields.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -283,7 +321,7 @@
         action: function () {
           openModal("编辑卡片", cardDefs(link), function (f) {
             if (!f.title) {
-              alert("标题不能为空");
+              window.say("标题不能为空");
               return false;
             }
             link.title = f.title;
@@ -301,11 +339,11 @@
         label: "删除卡片",
         danger: true,
         action: function () {
-          if (confirm('确定删除卡片「' + (link.title || "未命名") + '」？')) {
+          window.ask('确定删除卡片「' + (link.title || "未命名") + '」？', function () {
             found.group.links.splice(found.li, 1);
             save();
             rerender();
-          }
+          });
         }
       }
     ]);
@@ -330,7 +368,7 @@
             ],
             function (f) {
               if (!f.title) {
-                alert("标题不能为空");
+                window.say("标题不能为空");
                 return false;
               }
               g.links = g.links || [];
@@ -353,7 +391,7 @@
             ],
             function (f) {
               if (!f.name) {
-                alert("分组名不能为空");
+                window.say("分组名不能为空");
                 return false;
               }
               g.name = f.name;
@@ -370,11 +408,11 @@
         label: "删除分组",
         danger: true,
         action: function () {
-          if (confirm('确定删除分组「' + g.name + '」及其全部卡片？')) {
+          window.ask('确定删除分组「' + g.name + '」及其全部卡片？', function () {
             window.LINKS.groups.splice(found.gi, 1);
             save();
             rerender();
-          }
+          });
         }
       }
     ]);
@@ -394,7 +432,7 @@
             ],
             function (f) {
               if (!f.name) {
-                alert("分组名不能为空");
+                window.say("分组名不能为空");
                 return false;
               }
               window.LINKS.groups = window.LINKS.groups || [];
@@ -421,7 +459,7 @@
         URL.revokeObjectURL(a.href);
       }, 1000);
     } catch (e) {
-      alert("导出失败：" + e.message);
+      window.say("导出失败：" + e.message);
     }
   }
 
@@ -577,7 +615,7 @@
             ],
             function (f) {
               if (!f.name) {
-                alert("分组名不能为空");
+                window.say("分组名不能为空");
                 return false;
               }
               window.LINKS.groups = window.LINKS.groups || [];
@@ -621,3 +659,4 @@
     }
   });
 })();
+

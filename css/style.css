@@ -811,6 +811,51 @@ textarea {
   }
 }
 
+/* ===== 黑客风提示 toast（替代原生 alert） ===== */
+.hack-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  z-index: 10002;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: var(--accent);
+  background: rgba(5, 12, 6, 0.95);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.35);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hack-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+/* 确认框正文 */
+.ask-msg {
+  padding: 4px 0 6px;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* 确认框的危险按钮态 */
+.m-btn.m-danger {
+  border-color: #7a2a2a;
+  color: #ff6b6b;
+}
+
+.m-btn.m-danger:hover {
+  background: rgba(255, 60, 60, 0.12);
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
 /* ===== 管理提示（右下角小字） ===== */
 #manage-hint {
   position: fixed;
