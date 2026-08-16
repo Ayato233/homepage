@@ -25,6 +25,9 @@
   document.addEventListener("mousemove", function (e) {
     var x = e.clientX;
     var y = e.clientY;
+    // 只要鼠标在动，准星就必须可见——不依赖 mouseenter 恢复
+    // （兼容原生 confirm/alert 弹窗打断后光标卡在隐藏态的问题）
+    curs.style.opacity = "1";
     curs.style.left = x + "px";
     curs.style.top = y + "px";
 
@@ -51,7 +54,11 @@
   document.addEventListener("mouseleave", function () {
     curs.style.opacity = "0";
   });
+  // 弹窗（confirm/alert）关闭后强制恢复可见，避免光标卡在隐藏态
   document.addEventListener("mouseenter", function () {
+    curs.style.opacity = "1";
+  });
+  window.addEventListener("focus", function () {
     curs.style.opacity = "1";
   });
 
