@@ -247,10 +247,7 @@
     modal.querySelector("#modal-cancel").textContent = "取消";
   };
 
-  // 点遮罩关闭
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) closeModal();
-  });
+  // 编辑弹窗/确认框：点遮罩空白处不关闭，防止误触丢失输入（仅按钮/Esc 可关闭）
   modal.querySelector("#modal-cancel").addEventListener("click", closeModal);
   modal.querySelector("#modal-ok").addEventListener("click", function () {
     if (typeof onModalSave !== "function") return;
